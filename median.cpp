@@ -37,9 +37,14 @@ double median(int ul, int ur, int vl, int vr) {
 		return u_median;
 	if (ur-ul == 1 && vr-vl == 1)
 		return (u[ul]+v[vl]) / 2.;
+	if (vr-vl < 3) {
+		swap(u, v); // It's O(1)
+		std::swap(ul, vl);
+		std::swap(ur, vr);
+	}
 	if (ur-ul == 1) {
 		int vm = (vl+vr) / 2;
-		if (less_than(u_median, v_median)) {
+		if (less_than(u[ul], v_median)) {
 			if ((vr-vl) % 2 == 1)
 				return (v[vm] + std::max(u[ul], v[vm-1])) / 2.;
 			else
@@ -52,10 +57,14 @@ double median(int ul, int ur, int vl, int vr) {
 				return std::min(u[ul], v[vm]);
 		}
 	}
-	if (ur-ul == 2)
-		;
-	if (vr-vl < 3)
-		;
+	if (ur-ul == 2) {
+		if (less_than(u[ul+1], v_median))
+			;
+		if (less_than(v_median, u[ul]))
+			;
+		else
+			;
+	}
 	int removable_length = std::min(nonmedian_half_length(ul, ur), nonmedian_half_length(vl, vr));
 	if (less_than(u_median, v_median)) {
 		ul += removable_length;
