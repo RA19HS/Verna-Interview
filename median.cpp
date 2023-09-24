@@ -37,7 +37,22 @@ double median(int ul, int ur, int vl, int vr) {
 		return u_median;
 	if (ur-ul == 1 && vr-vl == 1)
 		return (u[ul]+v[vl]) / 2.;
-	if (ur-ul < 3)
+	if (ur-ul == 1) {
+		int vm = (vl+vr) / 2;
+		if (less_than(u_median, v_median)) {
+			if ((vr-vl) % 2 == 1)
+				return (v[vm] + std::max(u[ul], v[vm-1])) / 2.;
+			else
+				return std::max(u[ul], v[vm-1]);
+		}
+		else {
+			if ((vr-vl) % 2 == 1)
+				return (v[vm] + std::min(u[ul], v[vm+1])) / 2.;
+			else
+				return std::min(u[ul], v[vm]);
+		}
+	}
+	if (ur-ul == 2)
 		;
 	if (vr-vl < 3)
 		;
