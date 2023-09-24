@@ -2,6 +2,12 @@
 #include <QCoreApplication>
 #include <iostream>
 
+struct data {
+    int m_value1;
+    int m_value2;
+    QString m_string;
+};
+
 class Server: public QObject {
 public:
     Server(): udp_socket(new QUdpSocket(this)) {
@@ -12,11 +18,13 @@ public slots:
     void read_data() {
         if (!udp_socket->hasPendingDatagrams())
             return;
-        udp_socket->readDatagram(data, 100'000);
-        std::cerr << "Read data: " << data << '\n';
+        udp_socket->readDatagram(buffer, 100'000);
+        std::cerr << "Read data: {" << ((data *)buffer)->m_value1 << ", "
+                  << ((data *)buffer)->m_value2 << ", "
+                  << ((data *)buffer)->m_string.toStdString() << "}\n";
     }
 private:
-    char data[100'000];
+    char buffer[100'000];
     QUdpSocket *udp_socket;
 };
 
