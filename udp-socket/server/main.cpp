@@ -14,7 +14,10 @@ public:
         udp_socket->bind(QHostAddress::LocalHost, 4321);
         connect(udp_socket, &QUdpSocket::readyRead, this, &Server::read_data);
     }
-public slots:
+private:
+    char buffer[100'000];
+    QUdpSocket *udp_socket;
+private slots:
     void read_data() {
         if (!udp_socket->hasPendingDatagrams())
             return;
@@ -23,9 +26,6 @@ public slots:
                   << ((data *)buffer)->m_value2 << ", "
                   << ((data *)buffer)->m_string.toStdString() << "}\n";
     }
-private:
-    char buffer[100'000];
-    QUdpSocket *udp_socket;
 };
 
 int main(int argc, char *argv[]) {
