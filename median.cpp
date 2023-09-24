@@ -5,8 +5,7 @@
 
 static constexpr double EPS = 1E-5;
 
-std::vector<int> u{1, 3, 5, 7, 9, 11, 13};
-std::vector<int> v{2, 4, 6};
+std::vector<int> u, v;
 
 double median(std::vector<int> &v, int l, int r) {
 	assert(l < r);
@@ -41,29 +40,45 @@ double median(int ul, int ur, int vl, int vr) {
 		swap(u, v); // It's O(1)
 		std::swap(ul, vl);
 		std::swap(ur, vr);
+		std::swap(u_median, v_median);
 	}
 	if (ur-ul == 1) {
-		int vm = (vl+vr) / 2;
+		const int vm = (vl+vr) / 2;
+		const bool odd_length_v = (vr-vl) % 2 == 1;
 		if (less_than(u[ul], v_median)) {
-			if ((vr-vl) % 2 == 1)
+			if (odd_length_v)
 				return (v[vm] + std::max(u[ul], v[vm-1])) / 2.;
 			else
 				return std::max(u[ul], v[vm-1]);
 		}
 		else {
-			if ((vr-vl) % 2 == 1)
+			if (odd_length_v)
 				return (v[vm] + std::min(u[ul], v[vm+1])) / 2.;
 			else
 				return std::min(u[ul], v[vm]);
 		}
 	}
 	if (ur-ul == 2) {
-		if (less_than(u[ul+1], v_median))
-			;
-		if (less_than(v_median, u[ul]))
-			;
-		else
-			;
+		const int vm = (vl+vr) / 2;
+		const bool odd_length_v = (vr-vl) % 2 == 1;
+		if (less_than(u[ul+1], v_median)) {
+			if (odd_length_v)
+				return std::max(u[ul+1], v[vm-1]);
+			else
+				return (v[vm] + std::max(u[ul+1], v[vm-1])) / 2.;
+		}
+		if (less_than(v_median, u[ul])) {
+			if (odd_length_v)
+				return std::min(u[ul], v[vm+1]);
+			else
+				return (v[vm-1] + std::min(u[ul], v[vm])) / 2.;
+		}
+		else {
+			if (odd_length_v)
+				return v[vm];
+			else
+				return (std::max(u[ul], v[vm-1]) + std::min(u[ul+1], v[vm])) / 2.;
+		}
 	}
 	int removable_length = std::min(nonmedian_half_length(ul, ur), nonmedian_half_length(vl, vr));
 	if (less_than(u_median, v_median)) {
@@ -78,7 +93,23 @@ double median(int ul, int ur, int vl, int vr) {
 }
 
 int main() {
-	std::cerr << median(u, 0, 1) << '\n';
-	std::cerr << median(0, size(u), 0, size(v)) << '\n';
+	u = {1, 3, 5, 7, 9, 11, 13};
+	v = {2, 4, 6, 8, 10};
+	std::cerr << "6.5 ? " << median(0, size(u), 0, size(v)) << '\n';
+	u = {1, 3, 5, 7, 9, 11};
+	v = {2, 4, 6, 8, 10};
+	std::cerr << "6 ? " << median(0, size(u), 0, size(v)) << '\n';
+	u = {1, 3, 5, 7, 9};
+	v = {2, 4, 7, 8, 10, 20};
+	std::cerr << "7 ? " << median(0, size(u), 0, size(v)) << '\n';
+	u = {1, 3, 5, 6, 9, 11};
+	v = {2, 4, 8, 8, 10, 20};
+	std::cerr << "7 ? " << median(0, size(u), 0, size(v)) << '\n';
+	u = {1, 3, 5, 6, 9, 11};
+	v = {4};
+	std::cerr << "5 ? " << median(0, size(u), 0, size(v)) << '\n';
+	u = {1, 3, 5, 6, 9, 11};
+	v = {4, 7};
+	std::cerr << "5.5 ? " << median(0, size(u), 0, size(v)) << '\n';
 	return 0;
 }
