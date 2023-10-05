@@ -2,9 +2,7 @@ name: Finding Median CI
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [ "test/fail-CI" ]
 
 jobs:
   CI:
