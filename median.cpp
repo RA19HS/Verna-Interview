@@ -61,7 +61,7 @@ static double median(const std::vector<int> &u, int ul, int ur, const std::vecto
 			active_elements.push_back(v[vm+1]);
 		}
 		sort(begin(active_elements), end(active_elements));
-		return median(active_elements, 2, size(active_elements));
+		return median(active_elements, 0, size(active_elements));
 	}
 	int removable_length = std::min(nonmedian_half_length(ul, ur), nonmedian_half_length(vl, vr));
 	if (less_than(u_median, v_median)) {
